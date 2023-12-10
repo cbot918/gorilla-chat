@@ -3,6 +3,7 @@ package pkg
 import (
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
 func SetupWEB(r *gin.Engine, urlPath string, assetPath string) *gin.Engine {
@@ -12,24 +13,41 @@ func SetupWEB(r *gin.Engine, urlPath string, assetPath string) *gin.Engine {
 	return r
 }
 
-func SetupSocketRouter(r *gin.Engine, path string) *gin.Engine {
+func SetupSocketRouter(r *gin.Engine, path string, db *sqlx.DB) *gin.Engine {
 
+	// socket := r.Group("/ws")
+	// socket.Use(RequireLogin(db))
 	r.GET(path, HandleWS)
 
 	return r
 }
 
-func SetupAPIRouter(r *gin.Engine) *gin.Engine {
+func SetupAPIRouter(e *gin.Engine, db *sqlx.DB) *gin.Engine {
 
-	api := r.Group("/api")
+	h := NewHandler(db)
+
+	auth := e.Group("/auth")
 	{
 
-		api.GET("/hello", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{"msg": "world"})
-		})
+		auth.POST("/signup", h.SignupHandler)
+		auth.POST("/signin", h.SigninHandler)
+		auth.POST("/authbeforews", h.AuthBeforeWSHandler)
 	}
 
-	r.GET("/ping", Ping)
+	// 1v1, 1vn, broadcast
+	message := e.Group("/message")
+	{
+		message.POST("")
+	}
 
-	return r
+	// create, delete, invite, join
+	room := e.Group("/room")
+	{
+
+	}
+
+	e.GET("/hello", Hello)
+	e.GET("/ping", Ping)
+
+	return e
 }

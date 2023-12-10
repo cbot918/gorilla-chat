@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
 const (
@@ -15,27 +16,48 @@ const (
 	wsUrl       = "/ws"
 )
 
-var corsPolicy = cors.Default()
-
 func main() {
 
 	r := gin.Default()
 
-	r = setups(r)
+	cfg, err := pkg.NewConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	err := r.Run(port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	db, err := pkg.NewDB(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r = setupHTTPServer(r, db)
+
+	err = r.Run(port)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func setups(r *gin.Engine) *gin.Engine {
+func setupHTTPServer(e *gin.Engine, db *sqlx.DB) *gin.Engine {
 
-	r = pkg.SetupWEB(r, webUrl, assetFolder)
-	r = pkg.SetupAPIRouter(r)
-	r = pkg.SetupSocketRouter(r, wsUrl)
+	e.Use(myCorsPolicy())
 
-	r.Use(corsPolicy)
+	e = pkg.SetupWEB(e, webUrl, assetFolder)
+	e = pkg.SetupAPIRouter(e, db)
+	e = pkg.SetupSocketRouter(e, wsUrl, db)
 
-	return r
+	return e
+}
+
+func defaultCorsPolicy() gin.HandlerFunc {
+	return cors.Default()
+}
+
+func myCorsPolicy() gin.HandlerFunc {
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowCredentials = true
+	config.AddAllowHeaders("Authorization") // Add other headers here if needed
+	config.AddAllowMethods("GET", "POST")   // Add other HTTP methods here if needed
+	return cors.New(config)
 }

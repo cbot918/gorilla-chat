@@ -1,7 +1,8 @@
 package pkg
 
 type User struct {
-	ID    string
-	Name  string
-	Email string
+	ID       string `db:"id"`
+	Email    string `db:"email"`
+	Password string `db:"password"`
+	Name     string `db:"name"`
 }
