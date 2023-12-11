@@ -2,6 +2,7 @@ import './App.css'
 import Chat from './components/chat/Chat'
 import Signup from './components/auth/Signup'
 import Signin from './components/auth/Signin'
+import Friend from './components/friend/Friend'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import { BrowserRouter } from 'react-router-dom'
@@ -16,6 +17,7 @@ function Router(){
       <Route path="/" element={<Chat/>}></Route>
       <Route path="/signup" element={<Signup/>}></Route>
       <Route path="/signin" element={<Signin/>}></Route>
+      <Route path="/friend" element={<Friend/>}></Route>
     </Routes>
   )
 }

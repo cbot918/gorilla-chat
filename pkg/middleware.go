@@ -4,14 +4,23 @@ import (
 	"fmt"
 	"net/http"
 
+	"gorilla-chat/pkg/jwty"
+	"gorilla-chat/pkg/types"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
 
+type RequireLoginRequest struct {
+	ID       string `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func RequireLogin(db *sqlx.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Start timer
-		var req SigninRequest
+		var req RequireLoginRequest
 		if err := c.BindJSON(&req); err != nil {
 			// Handle error, maybe return a 400 Bad Request response
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -26,8 +35,8 @@ func RequireLogin(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		user := NewJwty().DecodeJwt(authToken)
-		var u User
+		user := jwty.NewJwty().DecodeJwt(authToken)
+		var u types.User
 		err := db.Get(&u, "SELECT id,email,name FROM users WHERE id=?", user.Id)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "bad token or user data"})

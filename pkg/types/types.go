@@ -1,4 +1,4 @@
-package pkg
+package types
 
 type User struct {
 	ID       string `db:"id"`

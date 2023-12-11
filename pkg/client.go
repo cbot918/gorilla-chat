@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"gorilla-chat/pkg/types"
 	"log"
 	"net/http"
 
@@ -23,7 +24,7 @@ type Client struct {
 	Conn  *websocket.Conn
 }
 
-func NewClient(u *User, w http.ResponseWriter, r *http.Request) *Client {
+func NewClient(u *types.User, w http.ResponseWriter, r *http.Request) *Client {
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"gorilla-chat/pkg/types"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 
 func HandleWS(c *gin.Context) {
 
-	user := &User{
+	user := &types.User{
 		ID:    c.Query("id"),
 		Name:  c.Query("name"),
 		Email: c.Query("email"),

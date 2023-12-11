@@ -1,4 +1,4 @@
-package pkg
+package jwty
 
 import (
 	"fmt"

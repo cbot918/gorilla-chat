@@ -43,20 +43,25 @@ function Signin(){
 
   return(
     <div>
-      Email: <input 
-                id="email" 
-                type="text"
-                onChange={(e)=>{
-                  setEmail(e.target.value)
-                }}
-              />  
-      Password: <input 
-                  id="password" 
+      <div>
+        Email: <input 
+                  id="email" 
                   type="text"
                   onChange={(e)=>{
-                    setPassword(e.target.value)
+                    setEmail(e.target.value)
                   }}
-                />
+                />  
+      </div>
+      <div>
+        Password: <input 
+                    id="password" 
+                    type="text"
+                    onChange={(e)=>{
+                      setPassword(e.target.value)
+                    }}
+                  />
+      </div>
+
       <input type="button" value="signin" onClick={()=>{
         postData(email, password)
       }}/>

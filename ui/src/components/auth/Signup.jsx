@@ -6,32 +6,63 @@ function Signup(){
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
+  function postData(name, email, password) {
+  fetch("http://localhost:8088/auth/signup", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
   return(
     <div>
-      Name: <input 
-                id="name" 
-                type="text"
-                onChange={(e)=>{
-                  setName(e.target.value)
-                  console.log(name)
-                }}
-              /> 
-      Email: <input 
-                id="email" 
-                type="text"
-                onChange={(e)=>{
-                  setEmail(e.target.value)
-                  console.log(email)
-                }}
-              />  
-      Password: <input 
-                  id="password" 
+      <div>
+        Name: <input 
+                  id="name" 
                   type="text"
+                  value={name}
                   onChange={(e)=>{
-                    setPassword(e.target.value)
-                    console.log(password)
+                    setName(e.target.value)
                   }}
-                />
+                /> 
+      </div>
+      <div>
+        Email: <input 
+                  id="email" 
+                  type="text"
+                  value={email}
+                  onChange={(e)=>{
+                    setEmail(e.target.value)
+                  }}
+                />  
+      </div>
+      <div>
+        Password: <input 
+                    id="password" 
+                    type="text"
+                    value={password}
+                    onChange={(e)=>{
+                      setPassword(e.target.value)
+                    }}
+                  />
+      </div>
+      <input type="button" value="signin" onClick={()=>{
+        postData(name, email, password)
+        setName(''); setEmail(''); setPassword('')
+      }}/>
     </div>
   )
 }

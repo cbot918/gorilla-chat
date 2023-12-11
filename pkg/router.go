@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"gorilla-chat/pkg/handler"
+
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
@@ -24,7 +26,7 @@ func SetupSocketRouter(r *gin.Engine, path string, db *sqlx.DB) *gin.Engine {
 
 func SetupAPIRouter(e *gin.Engine, db *sqlx.DB) *gin.Engine {
 
-	h := NewHandler(db)
+	h := handler.NewHandler(db)
 
 	auth := e.Group("/auth")
 	{
@@ -40,14 +42,27 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB) *gin.Engine {
 		message.POST("")
 	}
 
-	// create, delete, invite, join
-	room := e.Group("/room")
-	{
+	// // create, delete, invite, join
+	// room := e.Group("/room")
+	// {
 
+	// }
+
+	// users: onlineUsers, offlineUsers
+	users := e.Group("/user")
+	{
+		users.GET("/online", h.OnlineUser)
+		users.GET("/all", h.AllUser)
 	}
 
-	e.GET("/hello", Hello)
-	e.GET("/ping", Ping)
+	// friend: add
+	friend := e.Group("/friend")
+	{
+		friend.POST("/add", h.AddFriendHandler)
+	}
+
+	e.GET("/hello", h.Hello)
+	e.GET("/ping", h.Ping)
 
 	return e
 }
