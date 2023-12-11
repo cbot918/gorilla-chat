@@ -31,8 +31,9 @@ function Router(){
 
 function App() {
   const [state,dispatch] = useReducer(reducer, initialState)
-
   const [ws, setWs] = useState(null);
+  const [unreadNotifies, setUnreadNotifies] = useState(0)
+  const [unreadMessages, setUnreadMessages] = useState(0)
 
   function authAndConnectWS( user, token ){
     fetch("http://localhost:8088/auth/authbeforews",{
@@ -89,14 +90,17 @@ function App() {
       authAndConnectWS( user, token )
     }
   },[])
-  
 
+  // function receiveNotification() { setHasNotification(true); }
+  // function cleanNotification() { setHasNotification(false); }
   return (
     <>
       <UserContext.Provider value={{state, dispatch, ws}}>
         <BrowserRouter>
-          <Navbar />
+          <Navbar unreadMessages={unreadMessages}/>
           <Router />
+          {/* <button onClick={receiveNotification}>got Notification</button>
+          <button onClick={cleanNotification}>clean Notification</button> */}
         </BrowserRouter>
       </UserContext.Provider>
     </>

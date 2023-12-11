@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"gorilla-chat/internal/jwty"
+	"gorilla-chat/internal/pkg/jwty"
 	"gorilla-chat/internal/types"
 
 	"github.com/gin-gonic/gin"

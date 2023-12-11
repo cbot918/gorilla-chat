@@ -2,7 +2,7 @@ package store
 
 import (
 	"fmt"
-	"gorilla-chat/internal/chat"
+	"gorilla-chat/internal/pkg/chat"
 )
 
 type Store struct {

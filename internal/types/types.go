@@ -6,3 +6,12 @@ type User struct {
 	Password string `db:"password"`
 	Name     string `db:"name"`
 }
+
+type Invite struct {
+	IID      string `db:"iid"`
+	FromUser string `db:"from_user"`
+	ToUser   string `db:"to_user"`
+}
+
+type Message struct {
+}

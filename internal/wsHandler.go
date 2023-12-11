@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"gorilla-chat/internal/chat"
+	"gorilla-chat/internal/pkg/chat"
 	"gorilla-chat/internal/store"
 	"gorilla-chat/internal/types"
 	"log"
@@ -30,7 +30,7 @@ func (ws *WSHandler) HandleWS(c *gin.Context) {
 
 	client := chat.NewClient(user, c.Writer, c.Request)
 
-	ws.Store.Clients[user.Email] = client
+	ws.Store.Clients[user.Name] = client
 
 	// PrintJSON(ws.Store.Clients)
 

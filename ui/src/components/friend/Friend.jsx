@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
+import M from 'materialize-css'
 function Friend(){
   const [email, setEmail] = useState("")
   const [allUsers, setAllUsers] = useState({})
+  const [onlineUsers, setOnlineUsers] = useState({})
   const [isLoadingOnline, setIsLoadingOnline] = useState(true); // Loading state
   const [isLoadingAll, setIsLoadingAll] = useState(true); // Loading state
 
-  function postData(token, targetEmail){
-    console.log(token)
-    console.log(targetEmail)
+  function addFriendRequest(token, from, name){
+    // M.toast({html: "送出邀請",classes:"#c62828 red darken-3"})
     fetch("http://localhost:8088/friend/add", {
       method: "post",
       headers: {
@@ -15,11 +16,17 @@ function Friend(){
         "Authorization": token
       },
       body: JSON.stringify({
-        targetEmail
+        from,
+        name
       }),
     })
-    .then((res) => res.json())
+    .then(res=>res.json())
     .then((data) => {
+      if(data.error){
+        M.toast({html: data.error,classes:"#c62828 red darken-3"})
+      } else {
+        M.toast({html:data.msg,classes:"#43a047 green darken-1"})
+      }
       console.log(data)
     })
     .catch((err) => {
@@ -39,7 +46,7 @@ function Friend(){
     })
     .then(res => res.json())
     .then(data => {
-      setAllUsers(data)
+      setOnlineUsers(data)
       setIsLoadingOnline(false)
     })
     .catch(err=>{
@@ -69,6 +76,7 @@ function Friend(){
 
 
   useEffect(()=>{
+    getOnlineUsers(localStorage.getItem("token"))
     getAllUsers(localStorage.getItem("token"))
   },[])
 
@@ -88,7 +96,12 @@ function Friend(){
         type="button"
         value="好友申請"
         onClick={()=>{
-          postData(localStorage.getItem("token"), email)
+          const user = JSON.parse(localStorage.getItem("user"))
+          addFriendRequest(
+            localStorage.getItem("token"), 
+            user.name,
+            email
+            )
           setEmail('')
         }}
       />
@@ -102,7 +115,7 @@ function Friend(){
           }}
         />
         <div>
-          <span>online:[ </span><span>{}</span><span>]</span>
+          <span>({ onlineUsers.count -1 }) online users: [ </span>{ !isLoadingOnline && onlineUsers ?<RenderOnlineUsers onlineUsers={onlineUsers}/>:<span>is loading...</span>}<span>]</span>
         </div>
         <input 
           type="button" 
@@ -112,7 +125,7 @@ function Friend(){
           }}
         />
         <div>
-          <span>allusers:[ </span>{ !isLoadingAll && allUsers ?<RenderAllUsers allUsers={allUsers}/>:<span>is loading...</span>}<span>]</span>
+          <span>({ allUsers.count -1 }) all users: [ </span>{ !isLoadingAll && allUsers ?<RenderAllUsers allUsers={allUsers}/>:<span>is loading...</span>}<span>]</span>
         </div>
       </div>
     </div>
@@ -122,9 +135,24 @@ function Friend(){
 function RenderAllUsers({allUsers}){
   return (
     <>
-    {allUsers.names.map((name, index)=>(
-      <span key={index}>{name} </span>
-    ))}
+      {allUsers.names
+        .filter((name)=> name != JSON.parse(localStorage.getItem('user')).name)
+        .map((name, index)=>(
+        <span key={index}>{name} </span>
+      ))}
+    </>
+    
+  )
+}
+
+function RenderOnlineUsers({onlineUsers}){
+  return (
+    <>
+      {onlineUsers.users
+        .filter((user)=>user != JSON.parse(localStorage.getItem('user')).name)
+        .map((name, index)=>(
+        <span key={index}>{name} </span>
+      ))}
     </>
     
   )

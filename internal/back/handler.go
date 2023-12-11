@@ -1,41 +1,41 @@
-package pkg
+package back
 
-import (
-	"fmt"
-	"gorilla-chat/pkg/dao"
-	"net/http"
+// import (
+// 	"fmt"
+// 	"gorilla-chat/pkg/dao"
+// 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/sqlx"
-)
+// 	"github.com/gin-gonic/gin"
+// 	"github.com/jmoiron/sqlx"
+// )
 
-type Handler struct {
-	Dao *dao.Dao
-}
+// type Handler struct {
+// 	Dao *dao.Dao
+// }
 
-func NewHandler(db *sqlx.DB) *Handler {
+// func NewHandler(db *sqlx.DB) *Handler {
 
-	return &Handler{
-		Dao: dao.NewDao(db),
-	}
-}
+// 	return &Handler{
+// 		Dao: dao.NewDao(db),
+// 	}
+// }
 
-type addFriendRequest struct {
-	TargetEmail string `json:"targetEmail"`
-}
+// type addFriendRequest struct {
+// 	TargetEmail string `json:"targetEmail"`
+// }
 
-func (h *Handler) AddFriendHandler(c *gin.Context) {
+// func (h *Handler) AddFriendHandler(c *gin.Context) {
 
-	fmt.Println("in add friend")
-}
+// 	fmt.Println("in add friend")
+// }
 
-// other handler
-func Ping(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
-	})
-}
+// // other handler
+// func Ping(c *gin.Context) {
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"message": "pong",
+// 	})
+// }
 
-func Hello(ctx *gin.Context) {
-	ctx.JSON(200, gin.H{"msg": "world"})
-}
+// func Hello(ctx *gin.Context) {
+// 	ctx.JSON(200, gin.H{"msg": "world"})
+// }

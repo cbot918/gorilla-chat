@@ -3,8 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"gorilla-chat/internal/util"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,10 +10,21 @@ type onlineUserRequest struct {
 	TargetEmail string `json:"targetEmail"`
 }
 
+type onlineUserResponse struct {
+	Count int      `json:"count"`
+	Users []string `json:"users"`
+}
+
 func (h *Handler) OnlineUser(c *gin.Context) {
-	h.Store.AddOnlineUsers("johnn")
-	h.Store.PrintOnlineUsers()
-	util.PrintJSON(h.Store.Clients)
+
+	userResponse := &onlineUserResponse{}
+
+	for _, v := range h.Store.Clients {
+		userResponse.Users = append(userResponse.Users, v.Name)
+	}
+	userResponse.Count = len(userResponse.Users)
+
+	c.JSON(http.StatusOK, userResponse)
 }
 
 type allUserResponse struct {

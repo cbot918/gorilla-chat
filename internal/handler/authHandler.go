@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"gorilla-chat/internal/jwty"
+	"gorilla-chat/internal/pkg/jwty"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
