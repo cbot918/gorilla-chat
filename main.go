@@ -2,6 +2,7 @@ package main
 
 import (
 	"gorilla-chat/pkg"
+	"gorilla-chat/pkg/store"
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -30,7 +31,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	r = setupHTTPServer(r, db)
+	s, err := store.NewStore()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r = setupHTTPServer(r, db, s)
 
 	err = r.Run(port)
 	if err != nil {
@@ -38,13 +44,13 @@ func main() {
 	}
 }
 
-func setupHTTPServer(e *gin.Engine, db *sqlx.DB) *gin.Engine {
+func setupHTTPServer(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine {
 
 	e.Use(myCorsPolicy())
 
 	e = pkg.SetupWEB(e, webUrl, assetFolder)
-	e = pkg.SetupAPIRouter(e, db)
-	e = pkg.SetupSocketRouter(e, wsUrl, db)
+	e = pkg.SetupAPIRouter(e, db, store)
+	e = pkg.SetupSocketRouter(e, wsUrl, store)
 
 	return e
 }

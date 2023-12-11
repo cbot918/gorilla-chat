@@ -1,8 +1,10 @@
+import Chat from '../chat/Chat'
+
 function Home(){
+
   return(
     <div>
-      
-      Home
+      <Chat/>
     </div>
   )
 }

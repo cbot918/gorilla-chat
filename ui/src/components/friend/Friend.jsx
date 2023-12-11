@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 function Friend(){
   const [email, setEmail] = useState("")
   const [allUsers, setAllUsers] = useState({})
-  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isLoadingOnline, setIsLoadingOnline] = useState(true); // Loading state
+  const [isLoadingAll, setIsLoadingAll] = useState(true); // Loading state
 
   function postData(token, targetEmail){
     console.log(token)
@@ -26,6 +27,27 @@ function Friend(){
     });
   }
 
+
+
+  function getOnlineUsers(token){
+    fetch("http://localhost:8088/user/online",{
+      method:"get",
+      headers:{
+        "Content-Type": "application/json",
+        "Authorization": token
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      setAllUsers(data)
+      setIsLoadingOnline(false)
+    })
+    .catch(err=>{
+      console.log(err)
+      setIsLoadingOnline(false)
+    })
+  }
+
   function getAllUsers(token){
     fetch("http://localhost:8088/user/all",{
       method:"get",
@@ -37,14 +59,13 @@ function Friend(){
     .then(res => res.json())
     .then(data => {
       setAllUsers(data)
-      setIsLoading(false)
+      setIsLoadingAll(false)
     })
     .catch(err=>{
       console.log(err)
-      setIsLoading(false)
+      setIsLoadingAll(false)
     })
   }
-
 
 
   useEffect(()=>{
@@ -73,18 +94,25 @@ function Friend(){
       />
 
       <div>
-        <input 
+      <input 
           type="button" 
-          value="刷新使用者" 
+          value="刷新online" 
           onClick={()=>{
-            getAllUsers(localStorage.getItem("token"))
+            getOnlineUsers(localStorage.getItem("token"))
           }}
         />
         <div>
           <span>online:[ </span><span>{}</span><span>]</span>
         </div>
+        <input 
+          type="button" 
+          value="刷新all" 
+          onClick={()=>{
+            getAllUsers(localStorage.getItem("token"))
+          }}
+        />
         <div>
-          <span>allusers:[ </span>{ !isLoading && allUsers ?<RenderAllUsers allUsers={allUsers}/>:<span>is loading...</span>}<span>]</span>
+          <span>allusers:[ </span>{ !isLoadingAll && allUsers ?<RenderAllUsers allUsers={allUsers}/>:<span>is loading...</span>}<span>]</span>
         </div>
       </div>
     </div>

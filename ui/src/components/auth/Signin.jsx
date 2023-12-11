@@ -31,8 +31,7 @@ function Signin(){
         localStorage.setItem("user",JSON.stringify(user))
         localStorage.setItem("token",token)
   
-        dispatch({type:"USER",payload:user})
-  
+        dispatch({type:"USER",payload:{user, token}})
         navigate('/')
       }
 
