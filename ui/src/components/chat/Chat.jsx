@@ -19,11 +19,11 @@ function Chat() {
             "to_user":  2
         })
 
-        if (e.key === 'Enter') {
-            setMessages([...messages, { text: newMessage, mine: true }]);
-            ws.send(msg)
-            setNewMessage(''); 
-        }
+        // if (e.key === 'Enter') {
+        //     setMessages([...messages, { text: newMessage, mine: true }]);
+        //     ws.send(msg)
+        //     setNewMessage(''); 
+        // }
     };
 
     const scrollToBottom = () => {
@@ -43,6 +43,7 @@ function Chat() {
             },
           }).then(res=>res.json())
           .then(data=>{
+            setMessages(data)
             console.log(data)
           }).catch(err=>{
             console.log(err)
@@ -59,13 +60,18 @@ function Chat() {
         // renderMessages()
     },[state])
 
+
+
     return (
         <div className="chat-container">
             <div className="messages-container" ref={messagesContainerRef}>
                 {messages.map((msg, index) => (
                     <div key={index} className={`message ${msg.mine ? 'mine' : ''}`}>
-                        {msg.text}
+                        <p>{msg.name}: {msg.content}</p>
                     </div>
+                    // <div key={index} className={`message ${msg.mine ? 'mine' : ''}`}>
+                    //     {msg.text}
+                    // </div>
                 ))}
             </div>
             <div className="input-container">
