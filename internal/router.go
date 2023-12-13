@@ -44,15 +44,15 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine 
 		users.GET("/all", h.AllUser)
 	}
 
-	channel := e.Group("/channel")
+	room := e.Group("/room")
 	{
-		channel.GET("/", h.UserChannelsHandler)
+		room.GET("/default", h.DefaultRoomHandler)
 	}
 
 	// 1v1, 1vn, broadcast
 	message := e.Group("/message")
 	{
-		message.POST("")
+		message.GET("/room/:id", h.RoomMessageHandler)
 	}
 
 	// friend: add

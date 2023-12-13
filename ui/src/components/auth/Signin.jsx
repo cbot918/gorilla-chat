@@ -25,7 +25,6 @@ function Signin(){
       if(data.error){
         console.log(data.error)
       } else {
-        console.log(data)
         const user = {"id":data.id, "email":data.email, "name":data.name}
         const token = data.token
         localStorage.setItem("user",JSON.stringify(user))

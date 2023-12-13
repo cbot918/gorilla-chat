@@ -3,6 +3,8 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 	"regexp"
 	"strings"
 
@@ -14,7 +16,7 @@ import (
 
 func NewDB(cfg *config.Config) (*sqlx.DB, error) {
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s", cfg.Username, cfg.Password, cfg.Hostname, cfg.Database)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=true", cfg.Username, cfg.Password, cfg.Hostname, cfg.Database)
 	db, err := sqlx.Connect(cfg.DBType, dsn)
 	if err != nil {
 		return nil, err
@@ -42,4 +44,17 @@ func PrintJSON(v any) {
 		return
 	}
 	fmt.Println(string(json))
+}
+
+func ReadJSON(path string) ([]byte, error) {
+	jsonFile, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer jsonFile.Close()
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		return nil, err
+	}
+	return byteValue, nil
 }

@@ -92,6 +92,7 @@ function App() {
     const user = localStorage.getItem("user")
     const token = localStorage.getItem("token")
     if(user && token){
+      console.log("inn")
       // setName(state.name)
       authAndConnectWS( user, token )
     }

@@ -36,23 +36,24 @@ function Friend(){
     });
   }
 
-  useEffect(() => {
-    console.log("in useEffect")
-    const token = localStorage.getItem("token");
-  
+  function refreshUsers(token){
     Promise.all([getOnlineUsers(token), getAllUsers(token)])
-      .then(([onlineUsersData, allUsersData]) => {
-        setOnlineUsers(onlineUsersData);
-        setIsLoadingOnline(false)
-        console.log(onlineUsersData)
+    .then(([onlineUsersData, allUsersData]) => {
+      setOnlineUsers(onlineUsersData);
+      setIsLoadingOnline(false)
 
-        let offlines = allUsersData.names.filter(x => !onlineUsersData.users.includes(x));
-        setOfflineUsers(offlines)
-        setIsLoadingOffline(false)
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-      });
+      let offlines = allUsersData.names.filter(x => !onlineUsersData.users.includes(x));
+      setOfflineUsers(offlines)
+      setIsLoadingOffline(false)
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+    });
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    refreshUsers(token)
   }, []);
 
   return(
@@ -63,7 +64,7 @@ function Friend(){
             type="button" 
             value="刷新users" 
             onClick={()=>{
-              getOnlineUsers(localStorage.getItem("token"))
+              refreshUsers(localStorage.getItem("token"))
             }}
           />
           <div>

@@ -1,0 +1,7 @@
+.roomlist-cursor:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+.roomlist-cursor.active {
+  color: rgb(243, 137, 137);
+}

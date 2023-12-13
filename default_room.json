@@ -1,0 +1,18 @@
+[
+  {
+    "room_id": 1,
+    "room_name": "大廳"
+  },
+  {
+    "room_id": 2,
+    "room_name": "2群"
+  },
+  {
+    "room_id": 3,
+    "room_name": "3群"
+  },
+  {
+    "room_id": 4,
+    "room_name": "4群"
+  }
+]
