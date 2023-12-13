@@ -3,7 +3,9 @@ import M from 'materialize-css'
 function Friend(){
   const [email, setEmail] = useState("")
   const [allUsers, setAllUsers] = useState({})
+  // const [offlineUsers, setOfflineUsers] = useState({})
   const [onlineUsers, setOnlineUsers] = useState({})
+  // const [isLoadingOffline, setIsLoadingOffline] = useState(true); // Loading state
   const [isLoadingOnline, setIsLoadingOnline] = useState(true); // Loading state
   const [isLoadingAll, setIsLoadingAll] = useState(true); // Loading state
 
@@ -74,24 +76,95 @@ function Friend(){
     })
   }
 
+  // function getOfflineUsers(token){
+  //   fetch("http://localhost:8088/user/offline",{
+  //     method:"get",
+  //     headers:{
+  //       "Content-Type": "application/json",
+  //       "Authorization": token
+  //     }
+  //   })
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     setOfflineUsers(data)
+  //     setIsLoadingOffline(false)
+  //   })
+  //   .catch(err=>{
+  //     console.log(err)
+  //     setIsLoadingAll(false)
+  //   })
+  // }
 
-  useEffect(()=>{
-    getOnlineUsers(localStorage.getItem("token"))
-    getAllUsers(localStorage.getItem("token"))
-  },[])
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+  
+    Promise.all([getOnlineUsers(token), getAllUsers(token)])
+      .then(([onlineUsersData, allUsersData]) => {
+        setOnlineUsers(onlineUsersData);
+        setAllUsers(allUsersData);
+
+        console.log(onlineUsersData)
+
+        // const offlineUsers = allUsersData.filter(user => 
+        //   !onlineUsersData.some(onlineUser => onlineUser.id === user.id)
+        // );
+        // // Now you have offline users separated
+        // console.log("Offline Users:", offlineUsers);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   return(
     <div>
-      <input 
+
+
+      <div>
+        <input 
+            type="button" 
+            value="刷新online" 
+            onClick={()=>{
+              getOnlineUsers(localStorage.getItem("token"))
+            }}
+          />
+          <div>
+            <span>({ onlineUsers.count -1 }) online users: [ </span>{ !isLoadingOnline && onlineUsers ?<RenderOnlineUsers onlineUsers={onlineUsers}/>:<span>is loading...</span>}<span>]</span>
+          </div>
+
+          {/* <input 
+            type="button" 
+            value="刷新offline" 
+            onClick={()=>{
+              getOfflineUsers(localStorage.getItem("token"))
+            }}
+          />
+          <div>
+            <span>({ offlineUsers.count -1 }) offline users: [ </span>{ !isLoadingOffline && offlineUsers ?<RenderOfflineUsers offlineUsers={offlineUsers}/>:<span>is loading...</span>}<span>]</span>
+          </div> */}
+          <input 
+            type="button" 
+            value="刷新all" 
+            onClick={()=>{
+              getAllUsers(localStorage.getItem("token"))
+            }}
+          />
+          <div>
+            <span>({ allUsers.count -1 }) offline users: [ </span>{ !isLoadingAll && allUsers ?<RenderAllUsers allUsers={allUsers}/>:<span>is loading...</span>}<span>]</span>
+          </div>
+        </div>
+      {/* 好友申請的 code, 暫時留一下 */}
+      {/* <input 
         id="email" 
         type="text"
         value={email}
         onChange={(e)=>{
           setEmail(e.target.value)
         }}
-      />
+      /> */}
 
-      <input 
+      {/* <input 
         id="" 
         type="button"
         value="好友申請"
@@ -104,39 +177,19 @@ function Friend(){
             )
           setEmail('')
         }}
-      />
+      /> */}
 
-      <div>
-      <input 
-          type="button" 
-          value="刷新online" 
-          onClick={()=>{
-            getOnlineUsers(localStorage.getItem("token"))
-          }}
-        />
-        <div>
-          <span>({ onlineUsers.count -1 }) online users: [ </span>{ !isLoadingOnline && onlineUsers ?<RenderOnlineUsers onlineUsers={onlineUsers}/>:<span>is loading...</span>}<span>]</span>
-        </div>
-        <input 
-          type="button" 
-          value="刷新all" 
-          onClick={()=>{
-            getAllUsers(localStorage.getItem("token"))
-          }}
-        />
-        <div>
-          <span>({ allUsers.count -1 }) all users: [ </span>{ !isLoadingAll && allUsers ?<RenderAllUsers allUsers={allUsers}/>:<span>is loading...</span>}<span>]</span>
-        </div>
-      </div>
+
     </div>
   )
 }
 
-function RenderAllUsers({allUsers}){
+
+function RenderOnlineUsers({onlineUsers}){
   return (
     <>
-      {allUsers.names
-        .filter((name)=> name != JSON.parse(localStorage.getItem('user')).name)
+      {onlineUsers.users
+        .filter((user)=>user != JSON.parse(localStorage.getItem('user')).name)
         .map((name, index)=>(
         <span key={index}>{name} </span>
       ))}
@@ -145,11 +198,24 @@ function RenderAllUsers({allUsers}){
   )
 }
 
-function RenderOnlineUsers({onlineUsers}){
+// function RenderOfflineUsers({offlineUsers}){
+//   return (
+//     <>
+//       {offlineUsers.users
+//         .filter((user)=>user != JSON.parse(localStorage.getItem('user')).name)
+//         .map((name, index)=>(
+//         <span key={index}>{name} </span>
+//       ))}
+//     </>
+    
+//   )
+// }
+
+function RenderAllUsers({allUsers}){
   return (
     <>
-      {onlineUsers.users
-        .filter((user)=>user != JSON.parse(localStorage.getItem('user')).name)
+      {allUsers.names
+        .filter((name)=> name != JSON.parse(localStorage.getItem('user')).name)
         .map((name, index)=>(
         <span key={index}>{name} </span>
       ))}

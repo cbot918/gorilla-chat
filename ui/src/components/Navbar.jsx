@@ -7,7 +7,7 @@ function Navbar({ unreadMessages }){
       <Link className='nav-link' to='/'>Message({unreadMessages})</Link>
       <Link className='nav-link' to='/signup'>Signup</Link>
       <Link className='nav-link' to='/signin'>Signin</Link>
-      <Link className='nav-link' to='/friend'>Friend</Link>
+      {/* <Link className='nav-link' to='/friend'>Friend</Link> */}
     </>
   )
 }

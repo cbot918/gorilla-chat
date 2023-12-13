@@ -1,10 +1,12 @@
 import Chat from '../chat/Chat'
-
+import Friend from '../friend/Friend'
 function Home(){
 
   return(
     <div>
-      <Chat/>
+      <Chat />
+      <br/><br/>
+      <Friend />
     </div>
   )
 }

@@ -22,7 +22,7 @@ function Router(){
       <Route path="/" element={<Home/>}></Route>
       <Route path="/signup" element={<Signup/>}></Route>
       <Route path="/signin" element={<Signin/>}></Route>
-      <Route path="/friend" element={<Friend/>}></Route>
+      {/* <Route path="/friend" element={<Friend/>}></Route> */}
     </Routes>
   )
 }
