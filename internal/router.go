@@ -37,23 +37,22 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine 
 		auth.POST("/authbeforews", h.AuthBeforeWSHandler)
 	}
 
-	// 1v1, 1vn, broadcast
-	message := e.Group("/message")
-	{
-		message.POST("")
-	}
-
-	// // create, delete, invite, join
-	// room := e.Group("/room")
-	// {
-
-	// }
-
 	// users: onlineUsers, offlineUsers
 	users := e.Group("/user")
 	{
 		users.GET("/online", h.OnlineUser)
 		users.GET("/all", h.AllUser)
+	}
+
+	channel := e.Group("/channel")
+	{
+		channel.GET("/", h.UserChannelsHandler)
+	}
+
+	// 1v1, 1vn, broadcast
+	message := e.Group("/message")
+	{
+		message.POST("")
 	}
 
 	// friend: add

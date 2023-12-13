@@ -36,15 +36,15 @@ function Friend(){
     });
   }
 
-
   useEffect(() => {
+    console.log("in useEffect")
     const token = localStorage.getItem("token");
   
     Promise.all([getOnlineUsers(token), getAllUsers(token)])
       .then(([onlineUsersData, allUsersData]) => {
         setOnlineUsers(onlineUsersData);
         setIsLoadingOnline(false)
-
+        console.log(onlineUsersData)
 
         let offlines = allUsersData.names.filter(x => !onlineUsersData.users.includes(x));
         setOfflineUsers(offlines)

@@ -8,22 +8,14 @@ function Chat() {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
     
-
-    // const handleSendMessage = () => {
-    //     if (newMessage.trim()) {
-    //         // Add the new message with a flag to indicate it's your message
-    //         setMessages([...messages, { text: newMessage, mine: true }]);
-    //         setNewMessage('');
-    //     }
-    // };
-
     const handleKeyDown = (e) => {
         const user = JSON.parse(localStorage.getItem("user"))
         const msg = JSON.stringify({
-            "id":       user.id,
+            "id":       parseInt(user.id),
             "email":    user.email,
             "name":     user.name, 
-            "message":  newMessage
+            "message":  newMessage,
+            "to_user":  2
         })
 
         if (e.key === 'Enter') {
@@ -32,7 +24,7 @@ function Chat() {
             setNewMessage(''); 
         }
     };
-    
+
     const scrollToBottom = () => {
         messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     };

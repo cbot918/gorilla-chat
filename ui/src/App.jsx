@@ -5,17 +5,23 @@ import Signin from './components/auth/Signin'
 import Friend from './components/users/Users'
 import { Routes, Route  } from 'react-router-dom'
 import Navbar from './components/Navbar'
-import { BrowserRouter } from 'react-router-dom'
-import { createContext, useReducer, useEffect, useState} from 'react'
+import { BrowserRouter, useNavigate } from 'react-router-dom'
+import { createContext, useReducer, useEffect, useState, useContext} from 'react'
 import { reducer,initialState } from './reducers/useReducer'
 
 export const UserContext = createContext()
 
 function Router(){
-
-  // const ws = useRef(null);
-  // const [authBeforeWs,setAuthBeforeWs] = useState("")
-  
+  const {state,dispatch} = useContext(UserContext)
+  const navigate = useNavigate()
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem('user'))
+    if(user){
+      dispatch({type:"USER", payload:user})
+    } else {
+      navigate("/signin")
+    }
+  },[])
 
   return (
     <Routes>
