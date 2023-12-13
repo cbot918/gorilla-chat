@@ -57,7 +57,7 @@ func (d *Dao) NameExists(name string) (bool, error) {
 
 func (d *Dao) GetUserByID(id string) (types.User, error) {
 	var user types.User
-	err := d.DB.Get(&user, "SELECT * FROM users WHERE id=?", id)
+	err := d.DB.Get(&user, "SELECT * FROM users WHERE user_id=?", id)
 	if err != nil {
 		return types.User{}, err
 	}

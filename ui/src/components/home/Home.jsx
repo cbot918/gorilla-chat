@@ -1,12 +1,18 @@
+import ChannelList from '../channelList/ChannelList'
 import Chat from '../chat/Chat'
-import Friend from '../friend/Friend'
+import Users from '../users/Users'
+import './home.css'
 function Home(){
 
   return(
-    <div>
-      <Chat />
-      <br/><br/>
-      <Friend />
+    <div className="home-container">
+      <div className="chattop-container">
+        <ChannelList />
+        <Chat />
+      </div>
+      <div className="users-container">
+        <Users />
+      </div>
     </div>
   )
 }
