@@ -16,6 +16,7 @@ require (
 )
 
 require (
+	github.com/Terry-Mao/goim v0.0.0-20220603075457-1800484a4533
 	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/cbot918/liby v1.2.2
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect

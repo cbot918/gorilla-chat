@@ -1,39 +1,66 @@
-import {useState, useContext} from 'react'
+import  { useState,useContext,useRef,useEffect } from 'react';
+import './chat.css'; // Make sure to create this CSS file
 import {UserContext} from '../../App'
-function Chat(){
 
-  const { ws } = useContext(UserContext);
+function Chat() {
+    const { ws } = useContext(UserContext);
 
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
+    const [newMessage, setNewMessage] = useState('');
+    const [messages, setMessages] = useState([]);
+    
 
-  function sendMessage(event){
-    event.preventDefault();
+    // const handleSendMessage = () => {
+    //     if (newMessage.trim()) {
+    //         // Add the new message with a flag to indicate it's your message
+    //         setMessages([...messages, { text: newMessage, mine: true }]);
+    //         setNewMessage('');
+    //     }
+    // };
 
-    if (inputMessage.trim() !== '') {
-        ws.send(inputMessage)
-        setInputMessage('')        
-    }
-  }
+    const handleKeyDown = (e) => {
+        const user = JSON.parse(localStorage.getItem("user"))
+        const msg = JSON.stringify({
+            "id":       user.id,
+            "email":    user.email,
+            "name":     user.name, 
+            "message":  newMessage
+        })
 
-  return (
-      <div>
-          <div> {name} </div>
-          <div>
-              {messages.map((msg, index) => (
-                  <p key={index}>{msg}</p>
-              ))}
-          </div>
-          <form onSubmit={sendMessage}>
-              <input
-                  type="text"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-              />
-              <button type="submit">Send</button>
-          </form>
-      </div>
-  );
+        if (e.key === 'Enter') {
+            setMessages([...messages, { text: newMessage, mine: true }]);
+            ws.send(msg)
+            setNewMessage(''); 
+        }
+    };
+    
+    const scrollToBottom = () => {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    };
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]); // Scrolls to bottom every time messages change
+    const messagesContainerRef = useRef(null);
+    return (
+        <div className="chat-container">
+            <div className="messages-container" ref={messagesContainerRef}>
+                {messages.map((msg, index) => (
+                    <div key={index} className={`message ${msg.mine ? 'mine' : ''}`}>
+                        {msg.text}
+                    </div>
+                ))}
+            </div>
+            <div className="input-container">
+                <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    onKeyDown={handleKeyDown}
+                />
+                {/* <button onClick={handleSendMessage}>Send</button> */}
+            </div>
+        </div>
+    );
 }
 
-export default Chat
+export default Chat;
