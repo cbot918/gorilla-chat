@@ -2,12 +2,6 @@ import './onlineOfflineUsers.css'
 
 function OnlineUsers({onlineUsers}){
 
-  function getCurrentUser(){
-    console.log()
-  }
-
-  
-
   return (
     <>
       {onlineUsers.users

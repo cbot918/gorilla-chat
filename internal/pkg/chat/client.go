@@ -33,5 +33,5 @@ func NewClient(u *types.User, w http.ResponseWriter, r *http.Request) *Client {
 		return nil
 	}
 
-	return &Client{u.ID, u.Name, u.Email, 0, conn}
+	return &Client{u.ID, u.Name, u.Email, 1, conn}
 }

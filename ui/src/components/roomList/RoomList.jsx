@@ -44,6 +44,26 @@ function RoomList(){
     })
   }
 
+  function getChattoUsers(userID){
+    fetch("http://localhost:8088/room/chatto",{
+      method: "post",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization":localStorage.getItem("token")
+      },
+      body: JSON.stringify({"user_id":userID})
+    }).then(res=>res.json())
+    .then(data=>{
+      console.log(data)
+    }).catch(err=>{
+      console.log(err)
+    })
+  }
+
+  // function getRoomList(){
+  //   Promise.all([getDefaultRooms(), getChattoUsers(userID)])
+  // }
+
   function setCurrentRoom(roomID){
     const user = JSON.parse(localStorage.getItem('user'))
     setActiveRoom(roomID);
@@ -52,9 +72,12 @@ function RoomList(){
     enterRoomRequest(reqData)
   }
 
+  
+
   useEffect(()=>{
     getDefaultRooms()
-
+    const user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
+    getChattoUsers(user_id)
     // 寫死一開始到 room 大廳
     setCurrentRoom(1)
     dispatchRoomData({room_id: 1, room_name: '大廳'})

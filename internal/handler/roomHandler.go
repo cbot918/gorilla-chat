@@ -1,14 +1,42 @@
 package handler
 
 import (
+	"fmt"
+	"gorilla-chat/internal/types"
+	"gorilla-chat/internal/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+type roomResponse struct {
+	RoomID   int    `json:"room_id"`
+	RoomName string `json:"room_name"`
+}
+
 func (h *Handler) DefaultRoomHandler(c *gin.Context) {
 
-	c.JSON(http.StatusOK, h.Store.DefaultRooms)
+	var roomResponse []types.Room
+
+	err := h.Dao.DB.Select(&roomResponse, "SELECT * FROM rooms")
+	if err != nil {
+		fmt.Println(err)
+		// c.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	util.PrintJSON(roomResponse)
+
+	// fmt.Println(h.Store.DefaultRooms)
+
+	// var roomsResponse []roomResponse
+	// for _,room := range roomDBRes {
+	// 	roomsResponse = append(roomsResponse, roomResponse{
+
+	// 	})
+	// }
+
+	c.JSON(http.StatusOK, roomResponse)
 
 }
 

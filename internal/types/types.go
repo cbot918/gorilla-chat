@@ -18,6 +18,21 @@ type Message struct {
 	CreatedAt []uint8 `db:"created_at"`
 }
 
+type Room struct {
+	RoomID   int    `db:"room_id" json:"room_id"`
+	RoomName string `db:"room_name" json:"room_name"`
+}
+
+type ChatTo struct {
+	UserID int `db:"user_id"`
+	ChatTo int `db:"chatto_id"`
+}
+
+type GetChatToParam struct {
+	UserID int    `db:"user_id"`
+	Name   string `db:"name"`
+}
+
 type GetRoomMessagesParam struct {
 	ID        int       `db:"id"`
 	RoomID    int       `db:"room_id"`

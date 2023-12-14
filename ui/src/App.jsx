@@ -7,12 +7,11 @@ import { Routes, Route  } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import { BrowserRouter, useNavigate } from 'react-router-dom'
 import { createContext, useReducer, useEffect, useState, useContext} from 'react'
-import { reducer,initialState } from './reducers/useReducer'
+import { reducer,initialState} from './reducers/useReducer'
 
 export const UserContext = createContext()
 
 function Router(){
-  const {state,dispatch} = useContext(UserContext)
   const navigate = useNavigate()
   useEffect(()=>{
     const user = JSON.parse(localStorage.getItem('user'))

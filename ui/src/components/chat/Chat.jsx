@@ -19,7 +19,6 @@ function Chat() {
             body: JSON.stringify(messageBody)
             }).then(res=>res.json())
             .then(data=>{
-                
             }).catch(err=>{
                 console.log(err)
             })
@@ -50,9 +49,13 @@ function Chat() {
     const messagesContainerRef = useRef(null);
 
     useEffect(() => {
+        // to fix: 抓掉一個ws來的空白 message, 不知道為什麼會收到
+        // 這邊暫時workaround
+        if(receivedMessage===""){
+            return
+        }
         let user = JSON.parse(localStorage.getItem('user'))
         let m = {}
-
         try {
             m = JSON.parse(receivedMessage);
         } catch (error) {

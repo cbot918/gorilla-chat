@@ -29,3 +29,10 @@ export const reducer = (state, action) => {
   }
   return state;
 };
+
+export const roomInitialState = null;
+export const roomReducer = (state, action) => {
+  if (action.type == "ROOM") {
+    return action.payload;
+  }
+};
