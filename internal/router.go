@@ -47,6 +47,7 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine 
 	room := e.Group("/room")
 	{
 		room.GET("/default", h.DefaultRoomHandler)
+		room.POST("enter", h.EnterRoomHandler)
 	}
 
 	// 1v1, 1vn, broadcast

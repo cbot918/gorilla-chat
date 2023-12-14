@@ -18,10 +18,11 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
-	ID    string
-	Name  string
-	Email string
-	Conn  *websocket.Conn
+	ID          string
+	Name        string
+	Email       string
+	CurrentRoom int
+	Conn        *websocket.Conn
 }
 
 func NewClient(u *types.User, w http.ResponseWriter, r *http.Request) *Client {
@@ -32,5 +33,5 @@ func NewClient(u *types.User, w http.ResponseWriter, r *http.Request) *Client {
 		return nil
 	}
 
-	return &Client{u.ID, u.Name, u.Email, conn}
+	return &Client{u.ID, u.Name, u.Email, 0, conn}
 }

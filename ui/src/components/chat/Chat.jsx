@@ -19,27 +19,26 @@ function Chat() {
             body: JSON.stringify(messageBody)
             }).then(res=>res.json())
             .then(data=>{
-                console.log(data)
+                // todo: render received message
             }).catch(err=>{
                 console.log(err)
             })
     }
 
     const handleKeyDown = (e) => {
-        const user = JSON.parse(localStorage.getItem("user"))
-        const msg = JSON.stringify({
-            "room_id": state.room_id,
-            "user_id":  parseInt(user.id),
-            "email":    user.email,
-            "name":     user.name, 
-            "message":  newMessage,
-            // "to_user":  2
-        })
-
         if (e.key === 'Enter') {
+            const user = JSON.parse(localStorage.getItem("user"))
+            const msg = {
+                "room_id": state.room_id,
+                "user_id":  parseInt(user.id),
+                "email":    user.email,
+                "name":     user.name, 
+                "message":  newMessage,
+                // "to_user":  2
+            }
             setMessages([...messages, { content: newMessage, mine: true }]);
             sendMessage(msg)
-            // ws.send(msg)
+            // ws.send(JSON.stringify(msg))
             setNewMessage(''); 
         }
     };

@@ -19,8 +19,6 @@ type RoomMessageResp struct {
 
 func (h *Handler) RoomHistoryMessageHandler(c *gin.Context) {
 
-	fmt.Println("hihi")
-
 	rommID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse(err))
@@ -55,13 +53,30 @@ type ReceiveMessage struct {
 
 func (h *Handler) ReceiveRoomMessageHandler(c *gin.Context) {
 
-	var receivedMessage ReceiveMessage
-	err := c.BindJSON(&receivedMessage)
+	var req ReceiveMessage
+	err := c.BindJSON(&req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
-	util.PrintJSON(receivedMessage)
+	// todo: insert message to message table: room_id
 
+	util.PrintJSON(req)
+
+	for _, c := range h.Store.Clients {
+		fmt.Printf("req.RoomID:")
+		fmt.Println(req.RoomID)
+
+		fmt.Printf("c.CurrentRoom:")
+		fmt.Println(c.CurrentRoom)
+		if c.CurrentRoom == req.RoomID {
+			c.Conn.WriteJSON(req)
+		}
+
+	}
+
+	// h.Store.Clients[req.Name].Conn.WriteJSON(msgToTarget)
+
+	c.JSON(http.StatusOK, gin.H{"reply": "http message received"})
 }
