@@ -1,5 +1,5 @@
 import  { useState,useContext,useRef,useEffect } from 'react';
-import './chat.css'; // Make sure to create this CSS file
+import './chat.css'; 
 import {UserContext} from '../../App'
 
 function Chat() {
@@ -46,7 +46,7 @@ function Chat() {
     };
     useEffect(() => {
         scrollToBottom();
-    }, [messages]); // Scrolls to bottom every time messages change
+    }, [messages]); 
     const messagesContainerRef = useRef(null);
 
     useEffect(() => {

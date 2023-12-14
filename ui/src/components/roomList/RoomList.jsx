@@ -7,9 +7,6 @@ function RoomList(){
   const {state, dispatch} = useContext(UserContext)
   const [activeRoom, setActiveRoom] = useState(1);
   const [roomID, setRoomID] = useState(0)
-  useEffect(()=>{
-    getDefaultRooms()
-  },[])
 
   function dispatchRoomData(roomData){
     dispatch({type:"ROOM",payload:roomData})
@@ -47,6 +44,22 @@ function RoomList(){
     })
   }
 
+  function setCurrentRoom(roomID){
+    const user = JSON.parse(localStorage.getItem('user'))
+    setActiveRoom(roomID);
+    setRoomID(roomID)
+    const reqData = {"user_id":parseInt(user.id), "name":user.name, "room_id":roomID}
+    enterRoomRequest(reqData)
+  }
+
+  useEffect(()=>{
+    getDefaultRooms()
+
+    // 寫死一開始到 room 大廳
+    setCurrentRoom(1)
+    dispatchRoomData({room_id: 1, room_name: '大廳'})
+  },[])
+
   return(
     <div>
       {
@@ -56,13 +69,8 @@ function RoomList(){
               className={`roomlist-cursor ${activeRoom === room.room_id ? 'active' : ''}`} 
               key={index}
               onClick={()=>{
-                const user = JSON.parse(localStorage.getItem('user'))
-                setActiveRoom(room.room_id);
-                setRoomID(room.room_id)
+                setCurrentRoom(room.room_id)
                 dispatchRoomData(room)
-
-                const reqData = {"user_id":parseInt(user.id), "name":user.name, "room_id":room.room_id}
-                enterRoomRequest(reqData)
               }}
             >ooo {room.room_name}</div>
           )
