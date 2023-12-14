@@ -31,21 +31,32 @@ function RoomList(){
     })
   }
 
-  function wrapRoomObj(rooms, chattos){
-    console.log("in wrapRoomObj")
-    console.log(rooms)
-    console.log(chattos)
+  function getWrappedRoomObj(rooms, chattos){
 
-    // const editedRooms = rooms.map(r=>({...r, "type":"room"}))
-    // const editedChattos = chattos.map(u=>({...u, "type":"user"}))
+    const log = console.log
 
+    const editedRooms = rooms.map(r=>({...r, "type":"room"}))
+    const editedChattos = chattos.map(u=>({...u, "type":"user"}))
+    const lenEditedRooms = editedRooms.length
+    let newEditedRooms = Array.from(editedRooms)
+
+    editedChattos.forEach((item,index)=>{
+      newEditedRooms.push({
+        ...item,
+        "room_id":lenEditedRooms+index+1, 
+        "room_name":item.name
+      })
+    })
+    log(newEditedRooms)
+
+    return newEditedRooms
   }
 
   function getRoomList(){
     const user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
     Promise.all([getDefaultRooms(), getChattoUsers(user_id)])
       .then(([defaultRooms, chattoUsers])=>{
-        wrapRoomObj(defaultRooms,chattoUsers)
+        setRoomObj(getWrappedRoomObj(defaultRooms,chattoUsers))
         setRooms(defaultRooms)
         setChattos(chattoUsers)
       })
@@ -82,13 +93,15 @@ function RoomList(){
   }
 
 
-
-  function setCurrentRoom(roomID){
+  function setCurrentRoom(roomID, roomType){
     const user = JSON.parse(localStorage.getItem('user'))
     setActiveRoom(roomID);
-    setRoomID(roomID)
-    const reqData = {"user_id":parseInt(user.id), "name":user.name, "room_id":roomID}
-    enterRoomRequest(reqData)
+
+    if (roomType==="room"){
+      const reqData = {"user_id":parseInt(user.id), "name":user.name, "room_id":roomID}
+      enterRoomRequest(reqData)
+    }
+    
   }
 
   
@@ -97,20 +110,20 @@ function RoomList(){
     getRoomList()
 
     // 寫死一開始到 room 大廳
-    setCurrentRoom(1)
+    setCurrentRoom(1,"room")
     dispatchRoomData({room_id: 1, room_name: '大廳'})
   },[])
 
   return(
     <div>
       {
-        rooms.map((room,index)=>{
+        roomObj.map((room,index)=>{
           return (
             <div 
               className={`roomlist-cursor ${activeRoom === room.room_id ? 'active' : ''}`} 
               key={index}
               onClick={()=>{
-                setCurrentRoom(room.room_id)
+                setCurrentRoom(room.room_id, room.type)
                 dispatchRoomData(room)
               }}
             >ooo {room.room_name}</div>

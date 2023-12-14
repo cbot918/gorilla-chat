@@ -29,8 +29,8 @@ type ChatTo struct {
 }
 
 type GetChatToParam struct {
-	UserID int    `db:"user_id"`
-	Name   string `db:"name"`
+	UserID int    `db:"user_id" json:"user_id"`
+	Name   string `db:"name" json:"name"`
 }
 
 type GetRoomMessagesParam struct {

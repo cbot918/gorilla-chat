@@ -65,7 +65,7 @@ function Chat() {
         setMessages([...messages, { name:m.name , content: m.message, mine: m.user_id === parseInt(user.id)? true:false }]);
     },[receivedMessage])
 
-    function fetchMessages(roomID){
+    function fetchRoomHistoryMessages(roomID){
         fetch(`http://localhost:8088/message/room/${roomID}`,{
             method: "get",
             headers: {
@@ -82,11 +82,37 @@ function Chat() {
           })
     }
 
+    function fetchUserHistoryMessages(userID,chattoID){
+        console.log(userID)
+        console.log(chattoID)
+        fetch(`http://localhost:8088/message/user_history`,{
+            method: "post",
+            headers: {
+              "Content-Type":"application/json",
+              "Authorization": localStorage.getItem('token')
+            },
+          }).then(res=>res.json())
+          .then(data=>{
+            console.log(data)
+            // let user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
+            // const updatedData = data.map(m=> ({...m, mine:user_id === m.user_id}))
+            // setMessages(updatedData)
+          }).catch(err=>{
+            console.log(err)
+          })
+    }
+
     useEffect(()=>{
-        if(state){
-            console.log(state)
-            setRoom(state)
-            fetchMessages(state.room_id)
+        const roomState = state
+        if(roomState){
+            if(roomState.type === "room"){
+                fetchRoomHistoryMessages(state.room_id)
+            }
+            if(roomState.type === "user"){
+                const myID = parseInt(JSON.parse(localStorage.getItem('user')).id)
+                const chattoID = roomState.user_id
+                fetchUserHistoryMessages(myID,chattoID)
+            }
         }
 
     },[state])
