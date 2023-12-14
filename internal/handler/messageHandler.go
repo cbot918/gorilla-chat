@@ -60,23 +60,19 @@ func (h *Handler) ReceiveRoomMessageHandler(c *gin.Context) {
 		return
 	}
 
-	// todo: insert message to message table: room_id
+	err = h.Dao.AddMessageHistory(req.RoomID, req.UserID, 0, req.Message)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 
 	util.PrintJSON(req)
 
 	for _, c := range h.Store.Clients {
-		fmt.Printf("req.RoomID:")
-		fmt.Println(req.RoomID)
-
-		fmt.Printf("c.CurrentRoom:")
-		fmt.Println(c.CurrentRoom)
 		if c.CurrentRoom == req.RoomID {
 			c.Conn.WriteJSON(req)
 		}
-
 	}
-
-	// h.Store.Clients[req.Name].Conn.WriteJSON(msgToTarget)
 
 	c.JSON(http.StatusOK, gin.H{"reply": "http message received"})
 }

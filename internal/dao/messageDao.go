@@ -22,3 +22,15 @@ WHERE m.room_id = ?;
 
 	return results, nil
 }
+
+func (d *Dao) AddMessageHistory(roomID int, userID int, toUserID int, content string) error {
+
+	query := `INSERT INTO messages (room_id, user_id, to_user_id, content) VALUES (?,?,?,?)`
+	_, err := d.DB.Exec(query, roomID, userID, toUserID, content)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

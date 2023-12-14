@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,14 +27,7 @@ func (h *Handler) EnterRoomHandler(c *gin.Context) {
 		return
 	}
 
-	// fmt.Println(req.Name)
-	// fmt.Println(req.RoomID)
-
-	// fmt.Println(h.Store.Clients[req.Name])
-	fmt.Printf("RoomID: %d\n", req.RoomID)
 	h.Store.Clients[req.Name].CurrentRoom = req.RoomID
-	fmt.Printf("name:%s in room:%d\n",
-		h.Store.Clients[req.Name].Name,
-		h.Store.Clients[req.Name].CurrentRoom)
+
 	c.JSON(http.StatusOK, gin.H{"msg": "enter room success"})
 }
