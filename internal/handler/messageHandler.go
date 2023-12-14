@@ -12,6 +12,7 @@ import (
 
 type RoomMessageResp struct {
 	ID        int       `json:"room_id"`
+	UserID    int       `json:"user_id"`
 	Name      string    `json:"name"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
@@ -35,7 +36,7 @@ func (h *Handler) RoomHistoryMessageHandler(c *gin.Context) {
 	results := []RoomMessageResp{}
 	for _, m := range messages {
 		results = append(results, RoomMessageResp{
-			m.ID, m.Name, m.Content, m.CreatedAt,
+			m.ID, m.UserID, m.Name, m.Content, m.CreatedAt,
 		})
 	}
 

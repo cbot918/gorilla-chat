@@ -3,12 +3,12 @@ import './chat.css'; // Make sure to create this CSS file
 import {UserContext} from '../../App'
 
 function Chat() {
-    const { ws,state, } = useContext(UserContext);
+    const { state, receivedMessage} = useContext(UserContext);
     const [room, setRoom] = useState({})
 
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    
+
     function sendMessage(messageBody){
         fetch("http://localhost:8088/message/room",{
             method: "post",
@@ -19,7 +19,7 @@ function Chat() {
             body: JSON.stringify(messageBody)
             }).then(res=>res.json())
             .then(data=>{
-                // todo: render received message
+                
             }).catch(err=>{
                 console.log(err)
             })
@@ -36,9 +36,7 @@ function Chat() {
                 "message":  newMessage,
                 // "to_user":  2
             }
-            setMessages([...messages, { content: newMessage, mine: true }]);
             sendMessage(msg)
-            // ws.send(JSON.stringify(msg))
             setNewMessage(''); 
         }
     };
@@ -51,6 +49,19 @@ function Chat() {
     }, [messages]); // Scrolls to bottom every time messages change
     const messagesContainerRef = useRef(null);
 
+    useEffect(() => {
+        let user = JSON.parse(localStorage.getItem('user'))
+        let m = {}
+
+        try {
+            m = JSON.parse(receivedMessage);
+        } catch (error) {
+            console.error("Parsing error:", error);
+        }
+
+        setMessages([...messages, { name:m.name , content: m.message, mine: m.user_id === parseInt(user.id)? true:false }]);
+    },[receivedMessage])
+
     function fetchMessages(roomID){
         fetch(`http://localhost:8088/message/room/${roomID}`,{
             method: "get",
@@ -60,7 +71,9 @@ function Chat() {
             },
           }).then(res=>res.json())
           .then(data=>{
-            setMessages(data)
+            let user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
+            const updatedData = data.map(m=> ({...m, mine:user_id === m.user_id}))
+            setMessages(updatedData)
           }).catch(err=>{
             console.log(err)
           })
@@ -73,10 +86,7 @@ function Chat() {
             fetchMessages(state.room_id)
         }
 
-        // renderMessages()
     },[state])
-
-
 
     return (
         <div className="chat-container">
@@ -95,7 +105,6 @@ function Chat() {
                     placeholder="Type a message..."
                     onKeyDown={handleKeyDown}
                 />
-                {/* <button onClick={handleSendMessage}>Send</button> */}
             </div>
         </div>
     );

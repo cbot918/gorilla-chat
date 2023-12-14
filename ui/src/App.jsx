@@ -25,10 +25,9 @@ function Router(){
 
   return (
     <Routes>
-      <Route path="/" element={<Home/>}></Route>
+      <Route path="/" element={<Home />}></Route>
       <Route path="/signup" element={<Signup/>}></Route>
       <Route path="/signin" element={<Signin/>}></Route>
-      {/* <Route path="/friend" element={<Friend/>}></Route> */}
     </Routes>
   )
 }
@@ -40,6 +39,7 @@ function App() {
   const [ws, setWs] = useState(null);
   const [unreadNotifies, setUnreadNotifies] = useState(0)
   const [unreadMessages, setUnreadMessages] = useState(0)
+  const [receivedMessage, setReceivedMessage] = useState("")
 
   function authAndConnectWS( user, token ){
     fetch("http://localhost:8088/auth/authbeforews",{
@@ -71,10 +71,9 @@ function App() {
     const ws = new WebSocket(url)
     ws.onopen = () => {
       console.log("socket open")
-      // ws.current.send("hihi")
     }
     ws.onmessage = (e) => {
-      console.log(e.data)
+      setReceivedMessage(e.data)
     }
     ws.onerror = (e) =>{
       console.log("socket error")
@@ -92,22 +91,16 @@ function App() {
     const user = localStorage.getItem("user")
     const token = localStorage.getItem("token")
     if(user && token){
-      console.log("inn")
-      // setName(state.name)
       authAndConnectWS( user, token )
     }
   },[])
 
-  // function receiveNotification() { setHasNotification(true); }
-  // function cleanNotification() { setHasNotification(false); }
   return (
     <>
-      <UserContext.Provider value={{state, dispatch, ws}}>
+      <UserContext.Provider value={{state, dispatch, ws, receivedMessage}}>
         <BrowserRouter>
           <Navbar unreadMessages={unreadMessages}/>
           <Router />
-          {/* <button onClick={receiveNotification}>got Notification</button>
-          <button onClick={cleanNotification}>clean Notification</button> */}
         </BrowserRouter>
       </UserContext.Provider>
     </>
