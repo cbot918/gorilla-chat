@@ -3,7 +3,6 @@ package handler
 import (
 	"fmt"
 	"gorilla-chat/internal/types"
-	"gorilla-chat/internal/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,19 +24,7 @@ func (h *Handler) DefaultRoomHandler(c *gin.Context) {
 		return
 	}
 
-	util.PrintJSON(roomResponse)
-
-	// fmt.Println(h.Store.DefaultRooms)
-
-	// var roomsResponse []roomResponse
-	// for _,room := range roomDBRes {
-	// 	roomsResponse = append(roomsResponse, roomResponse{
-
-	// 	})
-	// }
-
 	c.JSON(http.StatusOK, roomResponse)
-
 }
 
 type EnterRoomRequest struct {

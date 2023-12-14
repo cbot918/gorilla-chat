@@ -4,9 +4,11 @@ import { UserContext } from '../../App'
 function RoomList(){
 
   const [rooms, setRooms] = useState([{}])
+  const [chattos, setChattos] = useState([{}])
   const {state, dispatch} = useContext(UserContext)
   const [activeRoom, setActiveRoom] = useState(1);
   const [roomID, setRoomID] = useState(0)
+  const [roomObj, setRoomObj] = useState([{}])
 
   function dispatchRoomData(roomData){
     dispatch({type:"ROOM",payload:roomData})
@@ -29,40 +31,56 @@ function RoomList(){
     })
   }
 
+  function wrapRoomObj(rooms, chattos){
+    console.log(rooms)
+    console.log(chattos)
+
+    const editedRooms = rooms.map(r=>({...r, "type":"room"}))
+    const editedChattos = chattos.map(u=>({...u, "type":"user"}))
+
+  }
+
+  function getRoomList(){
+    const user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
+    Promise.all([getDefaultRooms(), getChattoUsers(user_id)])
+      .then(([defaultRooms, chattoUsers])=>{
+        wrapRoomObj(defaultRooms,chattoUsers)
+        setRooms(defaultRooms)
+        setChattos(chattoUsers)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   function getDefaultRooms(){
-    fetch("http://localhost:8088/room/default",{
+    return fetch("http://localhost:8088/room/default",{
       method: "get",
       headers: {
         "Content-Type":"application/json",
         "Authorization":localStorage.getItem("token")
       },
-    }).then(res=>res.json())
-    .then(data=>{
-      setRooms(data)
-    }).catch(err=>{
-      console.log(err)
+    }).then(res=>{
+      if (!res.ok) { throw new Error('request default room failed')}
+      return res.json()
     })
   }
 
   function getChattoUsers(userID){
-    fetch("http://localhost:8088/room/chatto",{
+    return fetch("http://localhost:8088/room/chatto",{
       method: "post",
       headers: {
         "Content-Type":"application/json",
         "Authorization":localStorage.getItem("token")
       },
       body: JSON.stringify({"user_id":userID})
-    }).then(res=>res.json())
-    .then(data=>{
-      console.log(data)
-    }).catch(err=>{
-      console.log(err)
+    }).then(res=>{
+      if (!res.ok) { throw new Error('request chatto users failed')}
+      return res.json()
     })
   }
 
-  // function getRoomList(){
-  //   Promise.all([getDefaultRooms(), getChattoUsers(userID)])
-  // }
+
 
   function setCurrentRoom(roomID){
     const user = JSON.parse(localStorage.getItem('user'))
@@ -75,9 +93,8 @@ function RoomList(){
   
 
   useEffect(()=>{
-    getDefaultRooms()
-    const user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
-    getChattoUsers(user_id)
+    getRoomList()
+
     // 寫死一開始到 room 大廳
     setCurrentRoom(1)
     dispatchRoomData({room_id: 1, room_name: '大廳'})
