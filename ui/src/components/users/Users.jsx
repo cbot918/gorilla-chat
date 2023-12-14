@@ -39,6 +39,8 @@ function Friend(){
   function refreshUsers(token){
     Promise.all([getOnlineUsers(token), getAllUsers(token)])
     .then(([onlineUsersData, allUsersData]) => {
+      console.log(onlineUsersData)
+      console.log(allUsersData)
       setOnlineUsers(onlineUsersData);
       setIsLoadingOnline(false)
 

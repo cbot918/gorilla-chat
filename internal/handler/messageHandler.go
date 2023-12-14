@@ -2,7 +2,9 @@ package handler
 
 import (
 	"fmt"
+	"gorilla-chat/internal/util"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -15,11 +17,15 @@ type RoomMessageResp struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func (h *Handler) RoomMessageHandler(c *gin.Context) {
+func (h *Handler) RoomHistoryMessageHandler(c *gin.Context) {
 
 	fmt.Println("hihi")
 
-	rommID := 1
+	rommID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse(err))
+		return
+	}
 
 	messages, err := h.Dao.GetRoomMessages(rommID)
 	if err != nil {
@@ -36,5 +42,26 @@ func (h *Handler) RoomMessageHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, results)
+
+}
+
+type ReceiveMessage struct {
+	RoomID  int    `json:"room_id"`
+	UserID  int    `json:"user_id"`
+	EmailID string `json:"email"`
+	Name    string `json:"name"`
+	Message string `json:"message"`
+}
+
+func (h *Handler) ReceiveRoomMessageHandler(c *gin.Context) {
+
+	var receivedMessage ReceiveMessage
+	err := c.BindJSON(&receivedMessage)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	util.PrintJSON(receivedMessage)
 
 }

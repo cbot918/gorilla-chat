@@ -9,21 +9,39 @@ function Chat() {
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
     
+    function sendMessage(messageBody){
+        fetch("http://localhost:8088/message/room",{
+            method: "post",
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":localStorage.getItem("token")
+            },
+            body: JSON.stringify(messageBody)
+            }).then(res=>res.json())
+            .then(data=>{
+                console.log(data)
+            }).catch(err=>{
+                console.log(err)
+            })
+    }
+
     const handleKeyDown = (e) => {
         const user = JSON.parse(localStorage.getItem("user"))
         const msg = JSON.stringify({
-            "id":       parseInt(user.id),
+            "room_id": state.room_id,
+            "user_id":  parseInt(user.id),
             "email":    user.email,
             "name":     user.name, 
             "message":  newMessage,
-            "to_user":  2
+            // "to_user":  2
         })
 
-        // if (e.key === 'Enter') {
-        //     setMessages([...messages, { text: newMessage, mine: true }]);
-        //     ws.send(msg)
-        //     setNewMessage(''); 
-        // }
+        if (e.key === 'Enter') {
+            setMessages([...messages, { content: newMessage, mine: true }]);
+            sendMessage(msg)
+            // ws.send(msg)
+            setNewMessage(''); 
+        }
     };
 
     const scrollToBottom = () => {
@@ -44,7 +62,6 @@ function Chat() {
           }).then(res=>res.json())
           .then(data=>{
             setMessages(data)
-            console.log(data)
           }).catch(err=>{
             console.log(err)
           })
@@ -67,11 +84,8 @@ function Chat() {
             <div className="messages-container" ref={messagesContainerRef}>
                 {messages.map((msg, index) => (
                     <div key={index} className={`message ${msg.mine ? 'mine' : ''}`}>
-                        <p>{msg.name}: {msg.content}</p>
+                        {msg.mine?<p>{msg.content}</p>: <p>{msg.name}: {msg.content}</p>}
                     </div>
-                    // <div key={index} className={`message ${msg.mine ? 'mine' : ''}`}>
-                    //     {msg.text}
-                    // </div>
                 ))}
             </div>
             <div className="input-container">

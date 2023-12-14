@@ -52,7 +52,8 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine 
 	// 1v1, 1vn, broadcast
 	message := e.Group("/message")
 	{
-		message.GET("/room/:id", h.RoomMessageHandler)
+		message.GET("/room/:id", h.RoomHistoryMessageHandler)
+		message.POST("/room", h.ReceiveRoomMessageHandler)
 	}
 
 	// friend: add
