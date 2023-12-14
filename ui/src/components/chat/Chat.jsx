@@ -117,7 +117,6 @@ function Chat() {
 
     useEffect(()=>{
         setRoomState(state)
-        console.log(state)
         if(state){
             if(state.type === "room"){
                 fetchRoomHistoryMessages(state.room_id)
