@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"gorilla-chat/internal/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,8 +25,9 @@ func (h *Handler) ChattoHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-
-	util.PrintJSON(chattoQuery)
-
+	if chattoQuery == nil {
+		c.JSON(http.StatusOK, []string{})
+		return
+	}
 	c.JSON(http.StatusOK, chattoQuery)
 }

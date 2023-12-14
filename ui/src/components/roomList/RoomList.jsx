@@ -32,11 +32,12 @@ function RoomList(){
   }
 
   function wrapRoomObj(rooms, chattos){
+    console.log("in wrapRoomObj")
     console.log(rooms)
     console.log(chattos)
 
-    const editedRooms = rooms.map(r=>({...r, "type":"room"}))
-    const editedChattos = chattos.map(u=>({...u, "type":"user"}))
+    // const editedRooms = rooms.map(r=>({...r, "type":"room"}))
+    // const editedChattos = chattos.map(u=>({...u, "type":"user"}))
 
   }
 
