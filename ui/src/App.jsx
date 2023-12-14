@@ -2,7 +2,6 @@ import './App.css'
 import Home from './components/home/Home'
 import Signup from './components/auth/Signup'
 import Signin from './components/auth/Signin'
-import Friend from './components/users/Users'
 import { Routes, Route  } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import { BrowserRouter, useNavigate } from 'react-router-dom'
@@ -70,6 +69,7 @@ function App() {
     const ws = new WebSocket(url)
     ws.onopen = () => {
       console.log("socket open")
+      // dispatch({type:"ROOM",payload:{room_id: 1, room_name: '大廳'}})
     }
     ws.onmessage = (e) => {
       setReceivedMessage(e.data)

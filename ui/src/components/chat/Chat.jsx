@@ -4,7 +4,7 @@ import {UserContext} from '../../App'
 
 function Chat() {
     const { state, receivedMessage} = useContext(UserContext);
-    const [room, setRoom] = useState({})
+    const [roomState, setRoomState] = useState({})
 
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState([]);
@@ -26,16 +26,31 @@ function Chat() {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
+            console.log(roomState)
             const user = JSON.parse(localStorage.getItem("user"))
-            const msg = {
-                "room_id": state.room_id,
-                "user_id":  parseInt(user.id),
-                "email":    user.email,
-                "name":     user.name, 
-                "message":  newMessage,
-                // "to_user":  2
+            if(roomState.type === "room"){
+                const msg = {
+                    "room_id":  state.room_id,
+                    "user_id":  parseInt(user.id),
+                    "email":    user.email,
+                    "name":     user.name, 
+                    "message":  newMessage,
+                    "to_user_id":  0
+                }
+                sendMessage(msg)
             }
-            sendMessage(msg)
+            if(roomState.type === "user"){
+                const msg = {
+                    "room_id":  0,
+                    "user_id":  parseInt(user.id),
+                    "email":    user.email,
+                    "name":     user.name, 
+                    "message":  newMessage,
+                    "to_user_id":  roomState.user_id
+                }
+                sendMessage(msg)
+            }
+
             setNewMessage(''); 
         }
     };
@@ -50,7 +65,7 @@ function Chat() {
 
     useEffect(() => {
         // to fix: 抓掉一個ws來的空白 message, 不知道為什麼會收到
-        // 這邊暫時workaround
+        // 暫時 workaround
         if(receivedMessage===""){
             return
         }
@@ -66,7 +81,7 @@ function Chat() {
     },[receivedMessage])
 
     function fetchRoomHistoryMessages(roomID){
-        fetch(`http://localhost:8088/message/room/${roomID}`,{
+        fetch(`http://localhost:8088/message/history/room/${roomID}`,{
             method: "get",
             headers: {
               "Content-Type":"application/json",
@@ -83,34 +98,33 @@ function Chat() {
     }
 
     function fetchUserHistoryMessages(userID,chattoID){
-        console.log(userID)
-        console.log(chattoID)
-        fetch(`http://localhost:8088/message/user_history`,{
+        fetch(`http://localhost:8088/message/history/user`,{
             method: "post",
             headers: {
               "Content-Type":"application/json",
               "Authorization": localStorage.getItem('token')
             },
+            body:JSON.stringify({"user_id":userID, "to_user_id":chattoID})
           }).then(res=>res.json())
           .then(data=>{
-            console.log(data)
-            // let user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
-            // const updatedData = data.map(m=> ({...m, mine:user_id === m.user_id}))
-            // setMessages(updatedData)
+            let user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
+            const updatedData = data.map(m=> ({...m, mine:user_id === m.user_id}))
+            setMessages(updatedData)
           }).catch(err=>{
             console.log(err)
           })
     }
 
     useEffect(()=>{
-        const roomState = state
-        if(roomState){
-            if(roomState.type === "room"){
+        setRoomState(state)
+        console.log(state)
+        if(state){
+            if(state.type === "room"){
                 fetchRoomHistoryMessages(state.room_id)
             }
-            if(roomState.type === "user"){
+            if(state.type === "user"){
                 const myID = parseInt(JSON.parse(localStorage.getItem('user')).id)
-                const chattoID = roomState.user_id
+                const chattoID = state.user_id
                 fetchUserHistoryMessages(myID,chattoID)
             }
         }

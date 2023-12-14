@@ -43,6 +43,14 @@ type GetRoomMessagesParam struct {
 	Name      string    `db:"name"`
 }
 
+type GetUserMessageHistoryParam struct {
+	UserID    int       `db:"user_id" json:"user_id"`
+	ToUserID  int       `db:"to_user_id" json:"to_user_id"`
+	Content   string    `db:"content" json:"content"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	Name      string    `db:"name" json:"name"`
+}
+
 // type Channel struct {
 // 	ChannelID   string `db:"channel_id"`
 // 	ChannelName string `db:"channel_name"`

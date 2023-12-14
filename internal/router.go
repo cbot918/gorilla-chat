@@ -54,7 +54,9 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine 
 	// 1v1, 1vn, broadcast
 	message := e.Group("/message")
 	{
-		message.GET("/room/:id", h.RoomHistoryMessageHandler)
+		message.GET("/history/room/:id", h.RoomHistoryMessageHandler)
+		message.POST("/history/user", h.UserHistoryMessageHandler)
+		// server receive post message from user
 		message.POST("/room", h.ReceiveRoomMessageHandler)
 	}
 

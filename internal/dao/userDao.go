@@ -1,8 +1,6 @@
 package dao
 
 import (
-	"encoding/json"
-	"fmt"
 	"gorilla-chat/internal/types"
 )
 
@@ -12,18 +10,19 @@ func (d *Dao) GetAllUserName() ([]types.User, error) {
 
 	err := d.DB.Select(&users, "SELECT name FROM users")
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
 	return users, nil
 }
 
-func PrintJSON(v any) {
-	json, err := json.MarshalIndent(v, "", "  ")
+func (d *Dao) GetUserNameByID(userID int) (string, error) {
+	user := types.User{}
+
+	err := d.DB.Get(&user, "SELECT name FROM users where user_id=?", userID)
 	if err != nil {
-		fmt.Println("json transform failed")
-		return
+		return "", err
 	}
-	fmt.Println(string(json))
+
+	return user.Name, nil
 }
