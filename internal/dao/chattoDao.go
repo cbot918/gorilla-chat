@@ -22,3 +22,17 @@ WHERE c.user_id = ?;
 
 	return chatto, nil
 }
+
+func (d *Dao) AddChatTo(user int, chatto int) error {
+
+	query := `
+INSERT INTO chatto() VALUES(?,?);
+`
+
+	_, err := d.DB.Exec(query, user, chatto)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

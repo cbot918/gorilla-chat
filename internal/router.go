@@ -49,6 +49,7 @@ func SetupAPIRouter(e *gin.Engine, db *sqlx.DB, store *store.Store) *gin.Engine 
 		room.GET("/default", h.DefaultRoomHandler)
 		room.POST("/enter", h.EnterRoomHandler)
 		room.POST("/chatto", h.ChattoHandler)
+		room.POST("/chatto/add", h.AddChattoHandler)
 	}
 
 	// 1v1, 1vn, broadcast
