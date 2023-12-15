@@ -40,12 +40,18 @@ function Friend(){
     Promise.all([getOnlineUsers(token), getAllUsers(token)])
     .then(([onlineUsersData, allUsersData]) => {
       // console.log(onlineUsersData)
-      // console.log(allUsersData)
+      console.log("all user data")
+      console.log(allUsersData)
+      console.log("online users")
+      console.log(onlineUsersData)
       setOnlineUsers(onlineUsersData);
       setIsLoadingOnline(false)
 
-      let offlines = allUsersData.names.filter(x => !onlineUsersData.users.includes(x));
-      setOfflineUsers(offlines)
+      const onlineUserIds = new Set(onlineUsersData.map(user => user.user_id));
+      const offlineUsers = allUsersData.filter(user => !onlineUserIds.has(user.user_id));
+      console.log(offlineUsers)
+      // let offlines = allUsersData.names.filter(x => !onlineUsersData.users.includes(x));
+      setOfflineUsers(offlineUsers)
       setIsLoadingOffline(false)
     })
     .catch(error => {
@@ -70,7 +76,7 @@ function Friend(){
             }}
           />
           <div>
-            <span>({ onlineUsers.count -1 }) online users: [ </span>{ !isLoadingOnline && onlineUsers ?<OnlineUsers onlineUsers={onlineUsers}/>:<span>is loading...</span>}<span>]</span>
+            <span>({ onlineUsers.length -1 }) online users: [ </span>{ !isLoadingOnline && onlineUsers ?<OnlineUsers onlineUsers={onlineUsers}/>:<span>is loading...</span>}<span>]</span>
           </div>
 
 

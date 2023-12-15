@@ -31,6 +31,7 @@ function RoomList(){
     })
   }
 
+
   function getWrappedRoomObj(rooms, chattos){
 
     const log = console.log
@@ -104,7 +105,30 @@ function RoomList(){
     
   }
 
-  
+  useEffect(()=>{
+    console.log("in roomList useEffect")
+
+    if(state && state.chatto_id !==undefined && state.chatto_name !== undefined){
+
+      const exists = roomObj.some(item => {
+        return item.room_name === state.chatto_name
+      })
+      if (!exists) {
+        setRoomObj(
+          [...roomObj, 
+          {
+            "user_id": parseInt(state.chatto_id), 
+            "name": state.chatto_name, 
+            "type": "user", room_name:state.chatto_name, 
+            "room_id": roomObj.length + 1
+          }
+        ])
+      }
+
+
+    }
+  },[state])
+
 
   useEffect(()=>{
     getRoomList()
@@ -112,6 +136,7 @@ function RoomList(){
     // 寫死一開始到 room 大廳
     setCurrentRoom(1,"room")
     dispatchRoomData({room_id: 1, room_name: '大廳', type:"room"})
+
   },[])
 
   return(

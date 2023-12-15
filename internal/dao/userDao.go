@@ -4,11 +4,11 @@ import (
 	"gorilla-chat/internal/types"
 )
 
-func (d *Dao) GetAllUserName() ([]types.User, error) {
+func (d *Dao) GetAllUser() ([]types.User, error) {
 
 	users := []types.User{}
 
-	err := d.DB.Select(&users, "SELECT name FROM users")
+	err := d.DB.Select(&users, "SELECT user_id, name FROM users")
 	if err != nil {
 		return nil, err
 	}

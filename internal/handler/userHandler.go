@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"gorilla-chat/internal/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,38 +16,46 @@ type onlineUserResponse struct {
 	Users []string `json:"users"`
 }
 
+type onlineUserResp struct {
+	UserID string `json:"user_id"`
+	Name   string `json:"name"`
+}
+
 func (h *Handler) OnlineUser(c *gin.Context) {
 
-	userResponse := &onlineUserResponse{}
+	onlineUserResps := []onlineUserResp{}
 
 	for _, v := range h.Store.Clients {
-		userResponse.Users = append(userResponse.Users, v.Name)
+		onlineUserResps = append(onlineUserResps, onlineUserResp{
+			UserID: v.ID,
+			Name:   v.Name,
+		})
 	}
-	userResponse.Count = len(userResponse.Users)
 
-	c.JSON(http.StatusOK, userResponse)
+	util.PrintJSON(onlineUserResps)
+
+	c.JSON(http.StatusOK, onlineUserResps)
 }
 
 type allUserResponse struct {
-	Count int      `json:"count"`
-	Names []string `json:"names"`
+	UserID string `json:"user_id"`
+	Name   string `json:"name"`
 }
 
 func (h *Handler) AllUser(c *gin.Context) {
-	users, err := h.Dao.GetAllUserName()
+	users, err := h.Dao.GetAllUser()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
-	names := []string{}
-
+	var userResp []allUserResponse
 	for _, user := range users {
-		names = append(names, user.Name)
+		userResp = append(userResp, allUserResponse{
+			UserID: user.ID,
+			Name:   user.Name,
+		})
 	}
 
-	c.JSON(http.StatusOK, &allUserResponse{
-		Names: names,
-		Count: len(names),
-	})
+	c.JSON(http.StatusOK, userResp)
 }

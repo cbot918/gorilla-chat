@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -53,8 +52,6 @@ func (h *Handler) AddChattoHandler(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("should success")
-
-	c.JSON(http.StatusOK, gin.H{"msg": "add success"})
+	c.JSON(http.StatusOK, addChattoParam)
 
 }

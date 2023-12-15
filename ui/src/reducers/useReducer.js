@@ -10,6 +10,9 @@ export const reducer = (state, action) => {
   if (action.type == "ROOM") {
     return action.payload;
   }
+  if (action.type == "ADD_CHATTO") {
+    return action.payload;
+  }
 
   if (action.type == "CLEAR") {
     return null;
