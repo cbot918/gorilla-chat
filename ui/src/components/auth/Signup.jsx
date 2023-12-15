@@ -1,10 +1,14 @@
-import { useState } from 'react'
-
+import { useState, useContext, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
+import { UserContext } from '../../App'
 function Signup(){
-
+  
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { state, dispatch } = useContext(UserContext)
+
+  const navigate = useNavigate();
 
   function postData(name, email, password) {
   fetch("http://localhost:8088/auth/signup", {
@@ -20,6 +24,12 @@ function Signup(){
   })
     .then((res) => res.json())
     .then((data) => {
+      if(data.error){
+        console.log(data.error)
+      } else {
+        dispatch({type:"SIGNIN", payload:{email,password}})
+        navigate('/signin')
+      }
       console.log(data);
     })
     .catch((err) => {

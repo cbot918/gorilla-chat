@@ -1,11 +1,11 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
-import {UserContext} from '../../App'
+import { UserContext } from '../../App'
 
 function Signin(){
   const {state, dispatch} = useContext(UserContext)
-  const [email, setEmail] = useState("yall@gmail.com")
-  const [password, setPassword] = useState("12345")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const navigate = useNavigate();
   const [name, setName] = useState("")
@@ -39,12 +39,21 @@ function Signin(){
     })
   }
 
+  useEffect(()=>{
+    if(state){
+      console.log(state)
+      setEmail(state.email)
+      setPassword(state.password)
+    }
+  },[])
+
   return(
     <div>
       <div>
         Email: <input 
                   id="email" 
                   type="text"
+                  value={email}
                   onChange={(e)=>{
                     setEmail(e.target.value)
                   }}
@@ -54,6 +63,7 @@ function Signin(){
         Password: <input 
                     id="password" 
                     type="text"
+                    value={password}
                     onChange={(e)=>{
                       setPassword(e.target.value)
                     }}

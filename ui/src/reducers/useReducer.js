@@ -13,6 +13,9 @@ export const reducer = (state, action) => {
   if (action.type == "ADD_CHATTO") {
     return action.payload;
   }
+  if (action.type == "SIGNIN") {
+    return action.payload;
+  }
 
   if (action.type == "CLEAR") {
     return null;

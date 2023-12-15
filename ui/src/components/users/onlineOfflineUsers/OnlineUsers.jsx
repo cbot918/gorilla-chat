@@ -29,8 +29,6 @@ function OnlineUsers({onlineUsers}){
   }
 
   useEffect(()=>{
-    console.log("in useEffect")
-    console.log(chattoUser)
     dispatch({type:"ADD_CHATTO", payload:{"chatto_id":chattoUser.user_id, "chatto_name":chattoUser.name}})
   },[chattoPostCheck])
 
@@ -46,16 +44,13 @@ function OnlineUsers({onlineUsers}){
             key={user.user_id}
             data-userid={user.user_id}
             onClick={(e) => {
-              console.log(typeof(e.target.getAttribute('data-userid')))
-              console.log(e.target.getAttribute('data-userid'))
               const userID = parseInt(JSON.parse(localStorage.getItem('user')).id)
               const chattoID = parseInt(e.target.getAttribute('data-userid'))
               postAddChatto(userID, chattoID)
-              console.log(chattoID)
               setChattoUser({"user_id":chattoID, "name":e.target.textContent})
             }}
           >
-            {user.name}
+            {user.name}{' '}
           </span>
         ))
       // onlineUsers

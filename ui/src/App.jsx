@@ -35,8 +35,6 @@ function Router(){
 function App() {
   const [state,dispatch] = useReducer(reducer, initialState)
   const [ws, setWs] = useState(null);
-  const [unreadNotifies, setUnreadNotifies] = useState(0)
-  const [unreadMessages, setUnreadMessages] = useState(0)
   const [receivedMessage, setReceivedMessage] = useState("")
 
   function authAndConnectWS( user, token ){
@@ -98,7 +96,7 @@ function App() {
     <>
       <UserContext.Provider value={{state, dispatch, ws, receivedMessage}}>
         <BrowserRouter>
-          <Navbar unreadMessages={unreadMessages}/>
+          <Navbar />
           <Router />
         </BrowserRouter>
       </UserContext.Provider>

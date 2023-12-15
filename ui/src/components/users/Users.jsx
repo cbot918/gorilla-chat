@@ -39,18 +39,13 @@ function Friend(){
   function refreshUsers(token){
     Promise.all([getOnlineUsers(token), getAllUsers(token)])
     .then(([onlineUsersData, allUsersData]) => {
-      // console.log(onlineUsersData)
-      console.log("all user data")
-      console.log(allUsersData)
-      console.log("online users")
-      console.log(onlineUsersData)
+
       setOnlineUsers(onlineUsersData);
       setIsLoadingOnline(false)
 
       const onlineUserIds = new Set(onlineUsersData.map(user => user.user_id));
       const offlineUsers = allUsersData.filter(user => !onlineUserIds.has(user.user_id));
-      console.log(offlineUsers)
-      // let offlines = allUsersData.names.filter(x => !onlineUsersData.users.includes(x));
+      
       setOfflineUsers(offlineUsers)
       setIsLoadingOffline(false)
     })

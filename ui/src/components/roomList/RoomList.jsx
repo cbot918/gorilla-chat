@@ -106,10 +106,8 @@ function RoomList(){
   }
 
   useEffect(()=>{
-    console.log("in roomList useEffect")
-
+    // console.log(state)
     if(state && state.chatto_id !==undefined && state.chatto_name !== undefined){
-
       const exists = roomObj.some(item => {
         return item.room_name === state.chatto_name
       })

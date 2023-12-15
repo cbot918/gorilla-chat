@@ -26,7 +26,7 @@ function Chat() {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            console.log(roomState)
+            // console.log(roomState)
             const user = JSON.parse(localStorage.getItem("user"))
             if(roomState.type === "room"){
                 const msg = {

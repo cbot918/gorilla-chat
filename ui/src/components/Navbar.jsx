@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 import './navbar.css'
 
-function Navbar({ unreadMessages }){
+function Navbar(){
   return(
     <>
-      <Link className='nav-link' to='/'>Message({unreadMessages})</Link>
+      <Link className='nav-link' to='/'>Message</Link>
       <Link className='nav-link' to='/signup'>Signup</Link>
       <Link className='nav-link' to='/signin'>Signin</Link>
       {/* <Link className='nav-link' to='/friend'>Friend</Link> */}
