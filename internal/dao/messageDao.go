@@ -29,7 +29,7 @@ func (d *Dao) GetUserHistoryMessages(userID int, toUserID int) ([]types.GetUserM
 	query := `
 select m.user_id, m.to_user_id, m.content, m.created_at, u.name
 FROM messages m
-JOIN users u ON m.to_user_id = u.user_id
+JOIN users u ON m.user_id = u.user_id
 WHERE m.user_id = ? AND m.to_user_id = ? OR m.user_id = ? AND m.to_user_id = ?;
 `
 	err := d.DB.Select(&userMHistory, query, userID, toUserID, toUserID, userID)
