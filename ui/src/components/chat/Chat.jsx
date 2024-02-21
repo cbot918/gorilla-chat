@@ -107,6 +107,7 @@ function Chat() {
             body:JSON.stringify({"user_id":userID, "to_user_id":chattoID})
           }).then(res=>res.json())
           .then(data=>{
+            console.log(data)
             let user_id = parseInt(JSON.parse(localStorage.getItem('user')).id)
             const updatedData = data.map(m=> ({...m, mine:user_id === m.user_id}))
             setMessages(updatedData)
@@ -133,7 +134,7 @@ function Chat() {
     return (
         <div className="chat-container">
             <div className="messages-container" ref={messagesContainerRef}>
-                {messages.map((msg, index) => (
+                { messages.map((msg, index) => (
                     <div key={index} className={`message ${msg.mine ? 'mine' : ''}`}>
                         {msg.mine?<p>{msg.content}</p>: <p>{msg.name}: {msg.content}</p>}
                     </div>

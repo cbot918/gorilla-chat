@@ -7,6 +7,7 @@ function OnlineUsers({onlineUsers}){
   const [ chattoUser, setChattoUser ] = useState({})
   const [ chattoPostCheck, setchattoPostCheck] = useState(false)
   function postAddChatto(userID, chattoID){
+
     fetch("http://localhost:8088/room/chatto/add", {
       method:"post",
       headers:{
@@ -24,6 +25,7 @@ function OnlineUsers({onlineUsers}){
       setchattoPostCheck(true)
     })
     .catch(err=>{
+      console.log("here")
       console.log(err)
     })
   }
