@@ -129,11 +129,14 @@ function RoomList(){
 
 
   useEffect(()=>{
-    getRoomList()
+    if(state){
+      getRoomList()
 
-    // 寫死一開始到 room 大廳
-    setCurrentRoom(1,"room")
-    dispatchRoomData({room_id: 1, room_name: '大廳', type:"room"})
+      // 寫死一開始到 room 大廳
+      setCurrentRoom(1,"room")
+      dispatchRoomData({room_id: 1, room_name: '大廳', type:"room"})
+    }
+
 
   },[])
 
